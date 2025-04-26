@@ -64,7 +64,7 @@ exports.updateBlogPost = async (req, res) => {
     if (!blogPost) {
       return res.status(404).json({ message: 'Blog post not found' });
     }
-    if (blogPost.author.toString() !== req.user._id.toString() && req.user.role !== 'admin') {
+    if (blogPost.author.toString() !== req.user._id.toString()) {
       return res.status(403).json({ message: 'Not authorized to update this post' });
     }
     blogPost.title = req.body.title || blogPost.title;
@@ -82,7 +82,7 @@ exports.deleteBlogPost = async (req, res) => {
     if (!blogPost) {
       return res.status(404).json({ message: 'Blog post not found' });
     }
-    if (blogPost.author.toString() !== req.user._id.toString() && req.user.role !== 'admin') {
+    if (blogPost.author.toString() !== req.user._id.toString()) {
       return res.status(403).json({ message: 'Not authorized to delete this post' });
     }
     await BlogPost.deleteOne({ _id: req.params.id });
