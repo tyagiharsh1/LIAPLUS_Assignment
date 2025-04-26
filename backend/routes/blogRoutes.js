@@ -11,7 +11,7 @@ const { protect, authorizeRoles } = require('../middleware/authMiddleware');
 const router = express.Router();
 
 router.route('/')
-  .get(getAllBlogPosts)
+  .get(protect, getAllBlogPosts)
   .post(protect, authorizeRoles('admin'), createBlogPost);
 
 router.route('/:id')

@@ -59,3 +59,10 @@ exports.loginUser = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
+// Simple logout endpoint (optional, stateless JWT)
+exports.logoutUser = async (req, res) => {
+  // Since JWT is stateless, logout is handled client-side by deleting token
+  // This endpoint just responds with success
+  res.json({ message: 'Logged out successfully' });
+};

@@ -17,8 +17,22 @@ exports.createBlogPost = async (req, res) => {
 
 exports.getAllBlogPosts = async (req, res) => {
   try {
-    const blogPosts = await BlogPost.find().populate('author', 'name email');
-    res.json(blogPosts);
+    if (req.user.role !== 'user') {
+      return res.status(403).json({ message: 'Access denied: Only users can view all posts' });
+    }
+    // Populate author with name, email, and role
+    const blogPosts = await BlogPost.find().populate('author', 'name email role');
+    console.log('Fetched blog posts with authors:', blogPosts);
+    // Format createdAt to ISO string or desired format
+    const formattedPosts = blogPosts.map(post => ({
+      _id: post._id,
+      title: post.title,
+      content: post.content,
+      author: post.author,
+      createdAt: post.createdAt,
+      updatedAt: post.updatedAt,
+    }));
+    res.json(formattedPosts);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -30,7 +44,15 @@ exports.getBlogPostById = async (req, res) => {
     if (!blogPost) {
       return res.status(404).json({ message: 'Blog post not found' });
     }
-    res.json(blogPost);
+    const formattedPost = {
+      _id: blogPost._id,
+      title: blogPost.title,
+      content: blogPost.content,
+      author: blogPost.author,
+      createdAt: blogPost.createdAt,
+      updatedAt: blogPost.updatedAt,
+    };
+    res.json(formattedPost);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
